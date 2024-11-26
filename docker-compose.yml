@@ -1,0 +1,33 @@
+services:
+  app_carrefour:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://db_carrefour:5432/products?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER: roman
+      DB_PASSWORD: 1234
+    depends_on:
+      db_carrefour:
+        condition: service_healthy
+
+  db_carrefour:
+    container_name: java_db
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: roman
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: products
+    volumes:
+      - db_carrefour_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "roman", "-d", "products"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+volumes:
+  db_carrefour_data:
