@@ -31,6 +31,9 @@ public class ProductSevice {
 
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
         try{
+            if(productRequestDto.getName().equals("coca")){
+                throw new RuntimeException("Product cannot be coca");
+            }
             return this.mapEntityToDto(this.productRepository.save(this.mapDtoToEntity(productRequestDto)));
         }catch (Exception e){
             throw new RuntimeException(e);

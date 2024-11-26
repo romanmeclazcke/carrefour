@@ -16,22 +16,12 @@ public class ProductController {
 
     @GetMapping("")
     public ResponseEntity<?> getAllProducts() {
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(this.productSevice.getAllProducts());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(this.productSevice.getAllProducts());
     }
 
-
-    @PostMapping()
+    @PostMapping("")
     public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto productDto) {
-        try{
             return ResponseEntity.status(HttpStatus.OK).body(this.productSevice.createProduct(productDto));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
-
 
 }
