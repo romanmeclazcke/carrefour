@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.example.carrefour.User.Dto.UserRequestDto;
 import org.example.carrefour.User.Dto.UserResponseDto;
 import org.example.carrefour.User.Entity.User;
+import org.example.carrefour.User.Mapper.UserMapper;
 import org.example.carrefour.User.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,34 +18,19 @@ public class UserService {
 
     public UserResponseDto getUserById(Long userId) {
         return this.userRepository.findById(userId)
-                .map(this::mapEntityToDto)
+                .map(UserMapper.INSTANCE::mapEntityToDto)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
 
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         try{
-            User user= this.mapDtoToEntity(userRequestDto);
+            User user= UserMapper.INSTANCE.mapDtoToEntity(userRequestDto);
             this.userRepository.save(user);
-            return this.mapEntityToDto(user);
+            return UserMapper.INSTANCE.mapEntityToDto(user);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private UserResponseDto mapEntityToDto(User u){
-        UserResponseDto dto = new UserResponseDto();
-        dto.setId(u.getId());
-        dto.setUsername(u.getUsername());
-        dto.setPassword(u.getPassword());
-        return dto;
-    }
-
-
-    private User mapDtoToEntity(UserRequestDto u){
-        User entity = new User();
-        entity.setUsername(u.getUsername());
-        entity.setPassword(u.getPassword());
-        return entity;
-    }
 }
