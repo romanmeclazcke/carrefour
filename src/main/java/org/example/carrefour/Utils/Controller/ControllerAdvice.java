@@ -1,5 +1,7 @@
 package org.example.carrefour.Utils.Controller;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.example.carrefour.Utils.Dto.ErrorDto;
@@ -19,6 +21,7 @@ public class ControllerAdvice {
     private static final String BAD_REQUEST_ERROR = "BAD_REQUEST";
     private static final String ENTITY_NOT_FOUND_ERROR = "ENTITY_NOT_FOUND";
     private static final String INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
+    private static final String INVALID_TOKEN = "INVALID_TOKEN";
 
     @ExceptionHandler(value = RuntimeException.class)
     public ResponseEntity<ErrorDto> runtimeExceptionHandler(RuntimeException e) {
@@ -56,6 +59,24 @@ public class ControllerAdvice {
                 );
     }
 
+    @ExceptionHandler(value = JwtException.class)
+    public ResponseEntity<ErrorDto> JwtExceptionHandler(JwtException e) {
+        return buildErrorResponse(
+                "Invalid Token",
+                INVALID_TOKEN,
+                HttpStatus.UNAUTHORIZED
+        );
+    }
+
+    @ExceptionHandler(value = ExpiredJwtException.class)
+    public ResponseEntity<ErrorDto> JwtExpirationExceptionHandler(ExpiredJwtException e) {
+        return buildErrorResponse(
+                "Token expired",
+                INVALID_TOKEN,
+                HttpStatus.UNAUTHORIZED
+        );
+    }
+
     private ResponseEntity<ErrorDto> buildErrorResponse(String message, String errorCode, HttpStatus status) {
         ErrorDto errorDto = ErrorDto.builder()
                 .message(message)
@@ -64,4 +85,6 @@ public class ControllerAdvice {
                 .build();
         return new ResponseEntity<>(errorDto, status);
     }
+
+
 }
