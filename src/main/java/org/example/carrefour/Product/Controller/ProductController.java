@@ -1,5 +1,6 @@
 package org.example.carrefour.Product.Controller;
 
+import jakarta.validation.Valid;
 import org.example.carrefour.Product.Dto.ProductRequestDto;
 import org.example.carrefour.Product.Service.ProductSevice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto productDto) {
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductRequestDto productDto) {
             return ResponseEntity.status(HttpStatus.OK).body(this.productSevice.createProduct(productDto));
     }
 

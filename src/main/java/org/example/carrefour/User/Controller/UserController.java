@@ -1,5 +1,6 @@
 package org.example.carrefour.User.Controller;
 
+import jakarta.validation.Valid;
 import org.example.carrefour.User.Dto.UserRequestDto;
 import org.example.carrefour.User.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<?> createUser(@RequestBody UserRequestDto userRequestDto){
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequestDto userRequestDto){
         return ResponseEntity.status(HttpStatus.OK).body(userService.createUser(userRequestDto));
     }
 
