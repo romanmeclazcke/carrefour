@@ -3,10 +3,8 @@ services:
     build: .
     ports:
       - "8080:8080"
-    environment:
-      DB_URL: jdbc:postgresql://db_carrefour:5432/products?createDatabaseIfNotExist=true&serverTimezone=UTC
-      DB_USER: roman
-      DB_PASSWORD: 1234
+    env_file:
+      - .env
     depends_on:
       db_carrefour:
         condition: service_healthy
