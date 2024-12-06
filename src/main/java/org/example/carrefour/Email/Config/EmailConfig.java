@@ -13,12 +13,8 @@ import java.util.Properties;
 public class EmailConfig {
 
     public static final String host = "smtp.gmail.com";
-
-    @Value("${EMAIL_USER}")
-    private  static  String user;
-
-    @Value("${EMAIL_PASSWORD}")
-    private  static String password;
+    private  static  String user="";
+    private  static String password="";
 
     @Bean
     public Session emailSession() {

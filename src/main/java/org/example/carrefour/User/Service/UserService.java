@@ -37,7 +37,8 @@ public class UserService {
             User user= UserMapper.INSTANCE.mapDtoToEntity(userRequestDto);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             this.userRepository.save(user);
-            this.emailService.sendEmail(user.getEmail(),"hello","how are you");
+            System.out.println(user);
+            this.emailService.sendEmail(user.getEmail(),"pepe");
             return UserMapper.INSTANCE.mapEntityToDto(user);
         } catch (Exception e) {
             throw new RuntimeException(e);

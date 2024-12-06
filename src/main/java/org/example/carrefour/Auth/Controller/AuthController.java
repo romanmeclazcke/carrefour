@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.carrefour.Auth.Dto.LoginDto;
 import org.example.carrefour.Auth.Security.Jwt.TokenProvider;
+import org.example.carrefour.Email.Jwt.ConfirmationTokenProvider;
+import org.example.carrefour.User.Service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ public class AuthController {
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final ConfirmationTokenProvider confirmationTokenProvider;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto) {
@@ -32,7 +35,13 @@ public class AuthController {
 
 
     @PostMapping("/verify")
-    public ResponseEntity<String> login(@RequestParam String token ) {
-        return null;
+    public ResponseEntity<String> verify(@RequestParam String token) {
+        Boolean isValid = this.confirmationTokenProvider.validateConfirmationToken(token);
+        if (isValid) {
+            String email = this.confirmationTokenProvider.extractEmailFromToken(token);
+            return ResponseEntity.status(HttpStatus.OK).body("Account successfully confirmed for email: " + email);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token.");
     }
+
 }
