@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
+
     private final TokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
     private final ConfirmationTokenProvider confirmationTokenProvider;
+    private final UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto) {
@@ -35,13 +37,13 @@ public class AuthController {
 
 
     @PostMapping("/verify")
-    public ResponseEntity<String> verify(@RequestParam String token) {
-        Boolean isValid = this.confirmationTokenProvider.validateConfirmationToken(token);
-        if (isValid) {
-            String email = this.confirmationTokenProvider.extractEmailFromToken(token);
-            return ResponseEntity.status(HttpStatus.OK).body("Account successfully confirmed for email: " + email);
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token.");
+    public ResponseEntity<Boolean> verify(@RequestParam String token) {
+            Boolean isValid = this.confirmationTokenProvider.validateConfirmationToken(token);
+            if (isValid) {
+                String email = this.confirmationTokenProvider.extractEmailFromToken(token);
+                this.userService.validateUseEmail(email);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(true);
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @Service
@@ -37,7 +38,6 @@ public class UserService {
             User user= UserMapper.INSTANCE.mapDtoToEntity(userRequestDto);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             this.userRepository.save(user);
-            System.out.println(user);
             this.emailService.sendEmail(user.getEmail(),"pepe");
             return UserMapper.INSTANCE.mapEntityToDto(user);
         } catch (Exception e) {
@@ -45,10 +45,9 @@ public class UserService {
         }
     }
 
-
-    public void test(){
-        Predicate<Integer> aux = x->x>2;
-        System.out.println(aux.test(2));
+    public void validateUseEmail(String email) {
+        User user = this.userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("User with email " + email + " not found"));
+        user.setEmailValidate(true);
+        this.userRepository.save(user);
     }
-
 }

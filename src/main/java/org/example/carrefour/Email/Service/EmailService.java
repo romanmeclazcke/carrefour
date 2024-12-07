@@ -27,7 +27,6 @@ public class EmailService {
         try {
             // Generar el token de confirmación
             String token = this.confirmationTokenProvider.generateConfirmationToken(to);
-            System.out.println(token);
 
             // Hardcodear el contenido HTML dentro de la función
             String htmlContent = """

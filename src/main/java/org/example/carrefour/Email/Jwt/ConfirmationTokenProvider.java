@@ -19,7 +19,6 @@
 
         public String generateConfirmationToken(String email) {
             try {
-                System.out.println("Generating token with email: " + email);
                 long now = System.currentTimeMillis();
                 Date validity = new Date(now + EXPIRATION_TIME);
 
@@ -30,7 +29,6 @@
                         .signWith(key)
                         .compact();
 
-                System.out.println("Token generated: " + token);
                 return token;
             } catch (Exception e) {
                 e.printStackTrace(); // Mostrar detalles de la excepción

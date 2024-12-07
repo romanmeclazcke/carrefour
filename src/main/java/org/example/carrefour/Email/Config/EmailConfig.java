@@ -13,12 +13,15 @@ import java.util.Properties;
 public class EmailConfig {
 
     public static final String host = "smtp.gmail.com";
-    private  static  String user="";
-    private  static String password="";
+
+    @Value("${EMAIL_USER}")
+    private String user;
+
+    @Value("${EMAIL_PASSWORD}")
+    private String password;
 
     @Bean
     public Session emailSession() {
-        System.out.println(user + " " + password);
         Properties properties = new Properties();
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", "587");

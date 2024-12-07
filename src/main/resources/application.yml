@@ -9,4 +9,10 @@ spring:
     hibernate:
       ddl-auto: update
 
+  config:
+    import: optional:file:.env[.properties]
+
+  email:
+    user: ${EMAIL_USER}
+    password: ${EMAIL_PASSWORD}
 
